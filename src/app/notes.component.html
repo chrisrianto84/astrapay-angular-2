@@ -1,14 +1,53 @@
-<div>
+<div class="notes-container">
+  <h2>Add a Note</h2>
+  <form (ngSubmit)="addNote()" #noteForm="ngForm">
+    <div>
+      <input
+        type="text"
+        placeholder="Title"
+        [(ngModel)]="newTitle"
+        name="title"
+        required
+      />
+    </div>
+    <div>
+      <textarea
+        placeholder="Content"
+        [(ngModel)]="newContent"
+        name="content"
+        required
+      ></textarea>
+    </div>
+    <button type="submit" [disabled]="!newTitle.trim() && !newContent.trim()">Add Note</button>
+  </form>
+
+  <hr />
+
   <h2>Notes</h2>
-  <input [(ngModel)]="newTitle" placeholder="Title">
-  <textarea [(ngModel)]="newContent" placeholder="Content"></textarea>
-  <button (click)="addNote()">Add Note</button>
+  <p *ngIf="isLoading">Loading notes...</p>
 
   <ul>
     <li *ngFor="let note of notes">
-      <strong>{{ note.title }}</strong>
-      <p>{{ note.content }}</p>
-      <button (click)="deleteNote(note.id)">Delete</button>
+      <div *ngIf="editingNoteId !== note.id; else editTemplate">
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.content }}</p>
+        <small>Created: {{ note.createdAt | date:'short' }}</small>
+        <button class="btn-edit" (click)="startEdit(note)">Edit</button>
+        <button class="btn-delete" (click)="deleteNote(note.id)">Delete</button>
+      </div>
+
+      <ng-template #editTemplate>
+        <div>
+          <input type="text" [(ngModel)]="editedTitle" name="editedTitle" required />
+        </div>
+        <div>
+          <textarea [(ngModel)]="editedContent" name="editedContent" required></textarea>
+        </div>
+        <button (click)="updateNote()">Save</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </ng-template>
     </li>
   </ul>
+
+  <p *ngIf="notes.length === 0">No notes yet.</p>
 </div>
