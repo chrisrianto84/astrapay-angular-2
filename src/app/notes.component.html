@@ -1,0 +1,14 @@
+<div>
+  <h2>Notes</h2>
+  <input [(ngModel)]="newTitle" placeholder="Title">
+  <textarea [(ngModel)]="newContent" placeholder="Content"></textarea>
+  <button (click)="addNote()">Add Note</button>
+
+  <ul>
+    <li *ngFor="let note of notes">
+      <strong>{{ note.title }}</strong>
+      <p>{{ note.content }}</p>
+      <button (click)="deleteNote(note.id)">Delete</button>
+    </li>
+  </ul>
+</div>
